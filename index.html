@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joheliv Labs — PlayFrame Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#0b1020;color:#f5f7ff}
+button,input,select{font:inherit}
+.app{min-height:100vh;display:grid;grid-template-columns:380px 1fr}
+.sidebar{background:#11182b;border-right:1px solid #27314b;padding:22px;overflow:auto}
+.brand{font-size:22px;font-weight:800;margin-bottom:4px}.sub{color:#8e9ab5;font-size:13px;margin-bottom:22px}
+.section{border-top:1px solid #27314b;padding-top:18px;margin-top:18px}
+label{display:block;color:#aeb9d0;font-size:12px;font-weight:700;margin:12px 0 7px}
+input[type=text],select{width:100%;background:#0b1020;color:white;border:1px solid #303b58;border-radius:9px;padding:10px}
+input[type=color]{width:100%;height:40px;border:0;background:none}
+input[type=range]{width:100%}
+.upload{border:1px dashed #52617f;border-radius:10px;padding:14px;text-align:center;color:#9ba7c0;cursor:pointer}
+.upload:hover{border-color:#7da2ff;color:white}
+input[type=file]{display:none}
+button{border:0;border-radius:9px;padding:10px 12px;background:#273451;color:#fff;cursor:pointer;font-weight:700}
+button:hover{filter:brightness(1.15)}
+.primary{background:#4169e1}.danger{background:#7d2940}
+.gm{background:#7c3aed}
+.gm:hover{background:#8b5cf6}
+.full{width:100%;margin-top:9px}
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.template-grid button{font-size:11px;padding:9px}
+.status{font-size:12px;line-height:1.55;color:#aeb9d0}
+.check{padding:8px 10px;border-radius:8px;background:#17213a;margin:5px 0}.ok{color:#70e1a1}.warn{color:#ffd166}
+.main{display:flex;flex-direction:column;min-width:0}
+.topbar{height:64px;border-bottom:1px solid #27314b;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.topbar span{color:#8e9ab5;font-size:13px}
+.workspace{flex:1;display:flex;align-items:center;justify-content:center;padding:28px;overflow:auto}
+.stage{position:relative;box-shadow:0 25px 80px #0008;border-radius:22px;overflow:hidden}
+canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height:auto}
+.gallery{border-top:1px solid #27314b;padding:14px;display:flex;gap:10px;overflow:auto;min-height:118px}
+.thumb{position:relative;flex:0 0 150px;height:88px;border:1px solid #34405d;border-radius:9px;overflow:hidden;cursor:pointer;background:#080c17}
+.thumb img{width:100%;height:100%;object-fit:cover}.thumb.active{outline:2px solid #4169e1}
+.thumb span{position:absolute;bottom:0;left:0;right:0;background:#000b;padding:3px 6px;font-size:10px}
+.small{font-size:11px;color:#7f8ba5}
+
+/* GameMonetize asset panel */
+.gm-panel{background:#1a1235;border:1px solid #4c1d95;border-radius:12px;padding:14px;margin-top:10px}
+.gm-title{font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:10px;letter-spacing:0.5px}
+.gm-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.gm-btn{background:#7c3aed;color:#fff;border-radius:8px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.gm-btn:hover{background:#8b5cf6}
+.gm-btn small{display:block;font-weight:400;color:#ddd6fe;font-size:10px;margin-top:2px}
+.gm-btn .dims{background:#0004;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700}
+.gm-note{font-size:10px;color:#a78bfa;margin-top:10px;line-height:1.5}
+
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{max-height:none;border-right:0;border-bottom:1px solid #27314b}.workspace{min-height:55vh}canvas{max-width:92vw}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">Joheliv Labs</div>
+  <div class="sub">PlayFrame Studio · Google Play marketing toolkit</div>
+
+  <div class="section">
+    <label>Upload screenshots</label>
+    <label class="upload" for="files">Choose one or many screenshots</label>
+    <input id="files" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+    <div id="fileInfo" class="small" style="margin-top:8px">No screenshots loaded.</div>
+  </div>
+
+  <div class="section">
+    <label>Google Play format</label>
+    <select id="format">
+      <option value="phone">Phone portrait — 1080 × 1920</option>
+      <option value="phone2">Phone portrait — 1440 × 2560</option>
+      <option value="landscape">Landscape — 1920 × 1080</option>
+      <option value="feature">Feature graphic — 1024 × 500</option>
+      <option value="icon">App icon — 512 × 512</option>
+      <option value="custom">Custom</option>
+    </select>
+    <div id="customBox" style="display:none">
+      <label>Width</label><input id="cw" type="text" value="1080">
+      <label>Height</label><input id="ch" type="text" value="1920">
+    </div>
+  </div>
+
+  <div class="section">
+    <label>Device frame</label>
+    <select id="frame">
+      <option value="iphone">iPhone (Dynamic Island)</option>
+      <option value="android">Android (Punch Hole)</option>
+      <option value="huawei">Huawei (Marketing)</option>
+      <option value="googleplay">Google Play (Android Marketing)</option>
+      <option value="minimal">Minimal Border</option>
+      <option value="none">No frame (full bleed)</option>
+    </select>
+
+    <label>Screenshot zoom</label>
+    <input id="zoom" type="range" min="70" max="135" value="100">
+
+    <label>Screenshot vertical position</label>
+    <input id="pos" type="range" min="-35" max="35" value="0">
+  </div>
+
+  <div class="section">
+    <label>Marketing headline</label>
+    <input id="headline" type="text" placeholder="Your app headline">
+    <label>Supporting text</label>
+    <input id="caption" type="text" placeholder="Short feature description">
+  </div>
+
+  <div class="section">
+    <label>Background</label>
+    <input id="bg" type="color" value="#10182c">
+    <label>Headline size</label>
+    <input id="headlineSize" type="range" min="28" max="100" value="58">
+    <label>Text alignment</label>
+    <select id="align"><option>center</option><option>left</option><option>right</option></select>
+  </div>
+
+  <div class="section">
+    <label>Templates</label>
+    <div class="template-grid">
+      <button data-template="clean">Clean</button>
+      <button data-template="dark">Dark</button>
+      <button data-template="blue">Blue</button>
+      <button data-template="premium">Premium</button>
+      <button data-template="huawei">Huawei Red</button>
+      <button data-template="huawei-dark">Huawei Dark</button>
+      <button data-template="googleplay">Google Play</button>
+      <button data-template="googleplay-light">GP Light</button>
+    </div>
+  </div>
+
+  <!-- ============ GAMEMONETIZE ASSET EXPORT ============ -->
+  <div class="section">
+    <label>GameMonetize Assets</label>
+    <div class="gm-panel">
+      <div class="gm-title">⚡ GAMEMONETIZE EXPORT</div>
+      <div class="gm-grid">
+        <button class="gm-btn" data-gm="512x384">
+          <span>Image 512×384<small>Game cover (landscape)</small></span>
+          <span class="dims">512×384</span>
+        </button>
+        <button class="gm-btn" data-gm="512x512">
+          <span>Image 512×512<small>Square cover / icon</small></span>
+          <span class="dims">512×512</span>
+        </button>
+        <button class="gm-btn" data-gm="512x340">
+          <span>Image 512×340<small>Banner / thumbnail</small></span>
+          <span class="dims">512×340</span>
+        </button>
+        <button class="gm-btn" data-gm="all" style="background:#4c1d95">
+          <span>Download ALL 3<small>One click — all required sizes</small></span>
+          <span class="dims">ZIP</span>
+        </button>
+      </div>
+      <div class="gm-note">
+        💡 Exports the current screenshot rendered at the exact GameMonetize dimensions.
+        No frame is added — these are clean cover images.
+      </div>
+    </div>
+  </div>
+  <!-- ============ END GAMEMONETIZE ============ -->
+
+  <div class="section">
+    <label>Validation</label>
+    <div id="validation" class="status"></div>
+  </div>
+
+  <div class="section">
+    <button id="download" class="primary full">Download current PNG</button>
+    <button id="batch" class="primary full">Download all screenshots</button>
+    <button id="zip" class="full">Download ZIP</button>
+    <button id="reset" class="danger full">Reset project</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <strong>Joheliv Labs · Marketing Canvas</strong>
+    <span id="counter">0 / 0</span>
+  </div>
+  <div class="workspace">
+    <div class="stage"><canvas id="canvas"></canvas></div>
+  </div>
+  <div id="gallery" class="gallery"></div>
+</main>
+</div>
+
+<script>
+// ---------- helpers ----------
+const $ = id => document.getElementById(id);
+const canvas = $("canvas");
+const ctx = canvas.getContext("2d");
+
+let images = [];
+let active = 0;
+let settings = {
+  bg: "#10182c",
+  headline: "",
+  caption: "",
+  zoom: 100,
+  pos: 0,
+  headlineSize: 58,
+  align: "center",
+  frame: "iphone"
+};
+
+// ---------- canvas size ----------
+function size() {
+  const f = $("format").value;
+  if (f === "phone") return [1080, 1920];
+  if (f === "phone2") return [1440, 2560];
+  if (f === "landscape") return [1920, 1080];
+  if (f === "feature") return [1024, 500];
+  if (f === "icon") return [512, 512];
+  return [
+    parseInt($("cw").value) || 1080,
+    parseInt($("ch").value) || 1920
+  ];
+}
+
+// ---------- draw helpers ----------
+function fitImage(img, x, y, w, h) {
+  const ir = img.width / img.height;
+  const rr = w / h;
+  let sw, sh;
+  if (ir > rr) { sh = h; sw = h * ir; }
+  else { sw = w; sh = w / ir; }
+
+  const z = settings.zoom / 100;
+  sw *= z;
+  sh *= z;
+
+  const baseY = y + (h - sh) / 2;
+  const yy = baseY + (settings.pos / 100) * h;
+
+  const minY = y - (sh - h);
+  const maxY = y;
+  let finalY = yy;
+  if (sh > h) {
+    finalY = Math.min(maxY, Math.max(minY, yy));
+  } else {
+    finalY = y + (h - sh) / 2;
+  }
+
+  const finalX = x + (w - sw) / 2;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, h);
+  ctx.clip();
+  ctx.drawImage(img, finalX, finalY, sw, sh);
+  ctx.restore();
+}
+
+function roundRectPath(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+}
+
+function fillRoundRect(x, y, w, h, r, fill) {
+  roundRectPath(x, y, w, h, r);
+  ctx.fillStyle = fill;
+  ctx.fill();
+}
+
+function strokeRoundRect(x, y, w, h, r, stroke, lw) {
+  roundRectPath(x, y, w, h, r);
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = lw || 2;
+  ctx.stroke();
+}
+
+function wrap(text, maxWidth) {
+  const words = text.split(/\s+/);
+  const lines = [];
+  let line = "";
+  for (const w of words) {
+    const test = line ? line + " " + w : w;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = w;
+    } else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+// ---------- Device Frame Renderers ----------
+function drawIPhoneFrame(img, x, y, w, h) {
+  const radius = 38;
+  const border = 12;
+  const innerRadius = radius - 4;
+  const innerX = x + border;
+  const innerY = y + border;
+  const innerW = w - border * 2;
+  const innerH = h - border * 2;
+
+  const grad = ctx.createLinearGradient(x, y, x + w, y + h);
+  grad.addColorStop(0, "#2a2e36");
+  grad.addColorStop(0.5, "#1c1f26");
+  grad.addColorStop(1, "#0f1116");
+  fillRoundRect(x, y, w, h, radius, grad);
+
+  strokeRoundRect(x + 1, y + 1, w - 2, h - 2, radius - 1, "#4a4f5c", 2);
+  fillRoundRect(innerX - 2, innerY - 2, innerW + 4, innerH + 4, innerRadius + 2, "#000");
+
+  fitImage(img, innerX, innerY, innerW, innerH);
+
+  const islandW = innerW * 0.32;
+  const islandH = 30;
+  const islandX = innerX + (innerW - islandW) / 2;
+  const islandY = innerY + 7;
+  fillRoundRect(islandX, islandY, islandW, islandH, 16, "#000");
+  ctx.beginPath();
+  ctx.arc(islandX + islandW - 16, islandY + islandH / 2, 4.5, 0, Math.PI * 2);
+  ctx.fillStyle = "#1a1e26";
+  ctx.fill();
+
+  const barW = innerW * 0.35;
+  const barH = 4.5;
+  const barX = innerX + (innerW - barW) / 2;
+  const barY = innerY + innerH - barH - 7;
+  fillRoundRect(barX, barY, barW, barH, 2.5, "#e8ecf2");
+
+  const btnW = 3.5;
+  const btnH = 55;
+  fillRoundRect(x - 2, y + h * 0.18, btnW, btnH, 2, "#3a3f4a");
+  fillRoundRect(x - 2, y + h * 0.18 + btnH + 10, btnW, btnH, 2, "#3a3f4a");
+  fillRoundRect(x + w - 2, y + h * 0.22, btnW, btnH * 1.2, 2, "#3a3f4a");
+
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  ctx.beginPath();
+  ctx.roundRect(innerX, innerY, innerW, innerH, innerRadius);
+  ctx.clip();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(innerX, innerY, innerW, innerH * 0.4);
+  ctx.restore();
+}
+
+function drawAndroidFrame(img, x, y, w, h) {
+  const radius = 32;
+  const border = 10;
+  const innerRadius = radius - 4;
+  const innerX = x + border;
+  const innerY = y + border;
+  const innerW = w - border * 2;
+  const innerH = h - border * 2;
+
+  const grad = ctx.createLinearGradient(x, y, x + w, y + h);
+  grad.addColorStop(0, "#22262e");
+  grad.addColorStop(0.5, "#171a21");
+  grad.addColorStop(1, "#0d0f14");
+  fillRoundRect(x, y, w, h, radius, grad);
+
+  strokeRoundRect(x + 1, y + 1, w - 2, h - 2, radius - 1, "#3e4450", 2);
+  fillRoundRect(innerX - 2, innerY - 2, innerW + 4, innerH + 4, innerRadius + 2, "#000");
+
+  fitImage(img, innerX, innerY, innerW, innerH);
+
+  const holeR = 12;
+  const holeX = innerX + innerW / 2;
+  const holeY = innerY + 16;
+  ctx.beginPath();
+  ctx.arc(holeX, holeY, holeR, 0, Math.PI * 2);
+  ctx.fillStyle = "#000";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(holeX - 3.5, holeY - 3.5, 3.5, 0, Math.PI * 2);
+  ctx.fillStyle = "#1e2430";
+  ctx.fill();
+
+  const navW = innerW * 0.3;
+  const navH = 4.5;
+  const navX = innerX + (innerW - navW) / 2;
+  const navY = innerY + innerH - navH - 8;
+  fillRoundRect(navX, navY, navW, navH, 2.5, "#8b95a8");
+
+  const btnW = 3.5;
+  const btnH = 45;
+  fillRoundRect(x - 2, y + h * 0.2, btnW, btnH, 2, "#2e333d");
+  fillRoundRect(x - 2, y + h * 0.2 + btnH + 8, btnW, btnH, 2, "#2e333d");
+  fillRoundRect(x + w - 2, y + h * 0.24, btnW, btnH * 1.1, 2, "#2e333d");
+
+  ctx.save();
+  ctx.globalAlpha = 0.03;
+  ctx.beginPath();
+  ctx.roundRect(innerX, innerY, innerW, innerH, innerRadius);
+  ctx.clip();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(innerX, innerY, innerW, innerH * 0.35);
+  ctx.restore();
+}
+
+function drawHuaweiFrame(img, title, subtitle) {
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const bgGrad = ctx.createRadialGradient(W / 2, H * 0.15, H * 0.05, W / 2, H * 0.5, H * 0.95);
+  bgGrad.addColorStop(0, "#1e1e1e");
+  bgGrad.addColorStop(0.6, "#0a0a0a");
+  bgGrad.addColorStop(1, "#000000");
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  const redBlobs = [
+    { x: W * 0.15, y: H * 0.75, rx: W * 0.55, ry: H * 0.3, color: "rgba(220,20,20,0.18)" },
+    { x: W * 0.85, y: H * 0.60, rx: W * 0.45, ry: H * 0.25, color: "rgba(180,10,10,0.22)" },
+    { x: W * 0.50, y: H * 0.90, rx: W * 0.65, ry: H * 0.35, color: "rgba(120,0,0,0.15)" }
+  ];
+  redBlobs.forEach(b => {
+    const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, Math.max(b.rx, b.ry));
+    g.addColorStop(0, b.color);
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  });
+
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  for (let i = 0; i < 2200; i++) {
+    const nx = Math.random() * W;
+    const ny = Math.random() * H;
+    const r = Math.random() * 2 + 0.4;
+    ctx.fillStyle = Math.random() > 0.5 ? "#ffffff" : "#000000";
+    ctx.beginPath();
+    ctx.arc(nx, ny, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  const padX = W * 0.06;
+  const titleTop = H * 0.058;
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff";
+  const titleSize = Math.round(W * 0.085);
+  ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
+  const titleLines = title ? wrap(title.toUpperCase(), W - padX * 2) : [];
+  let ty = titleTop + titleSize;
+  titleLines.forEach(line => {
+    ctx.fillText(line, W / 2, ty);
+    ty += titleSize * 1.05;
+  });
+
+  const subSize = Math.round(W * 0.026);
+  ctx.font = `400 ${subSize}px Inter, Arial, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  const subLines = subtitle ? wrap(subtitle, W - padX * 2) : [];
+  ty += subSize * 0.4;
+  subLines.forEach(line => {
+    ctx.fillText(line, W / 2, ty);
+    ty += subSize * 1.35;
+  });
+
+  const deviceTop = ty + H * 0.04;
+  const deviceW = W * 0.52;
+  const deviceH = deviceW * (19.5 / 9);
+  const deviceX = (W - deviceW) / 2;
+  const deviceY = deviceTop;
+  const devicePad = 14;
+  const outerRadius = 52;
+  const screenRadius = 42;
+
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.9)";
+  ctx.shadowBlur = 80;
+  ctx.shadowOffsetY = 30;
+  fillRoundRect(deviceX, deviceY, deviceW, deviceH, outerRadius, "#000000");
+  ctx.restore();
+
+  strokeRoundRect(deviceX, deviceY, deviceW, deviceH, outerRadius, "#2a2a2a", 2);
+
+  ctx.save();
+  ctx.shadowColor = "rgba(220,20,20,0.35)";
+  ctx.shadowBlur = 60;
+  strokeRoundRect(deviceX + 1, deviceY + 1, deviceW - 2, deviceH - 2, outerRadius - 1, "rgba(220,20,20,0.25)", 3);
+  ctx.restore();
+
+  const screenX = deviceX + devicePad;
+  const screenY = deviceY + devicePad;
+  const screenW = deviceW - devicePad * 2;
+  const screenH = deviceH - devicePad * 2;
+
+  ctx.save();
+  roundRectPath(screenX, screenY, screenW, screenH, screenRadius);
+  ctx.clip();
+  if (img) {
+    fitImage(img, screenX, screenY, screenW, screenH);
+  } else {
+    ctx.fillStyle = "#0e0e0e";
+    ctx.fillRect(screenX, screenY, screenW, screenH);
+  }
+  ctx.restore();
+
+  strokeRoundRect(screenX, screenY, screenW, screenH, screenRadius, "rgba(255,255,255,0.06)", 2);
+
+  const notchW = screenW * 0.19;
+  const notchH = 26;
+  const notchX = screenX + (screenW - notchW) / 2;
+  const notchY = screenY;
+  roundRectPath(notchX, notchY, notchW, notchH, 0);
+  ctx.fillStyle = "#000";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 9, 0, Math.PI * 2);
+  ctx.fillStyle = "#111";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 5, 0, Math.PI * 2);
+  ctx.fillStyle = "#1a1a1a";
+  ctx.fill();
+
+  const footerY = deviceY + deviceH + H * 0.045;
+  const badgeSize = W * 0.052;
+  const badgeX = padX;
+  const badgeY = footerY;
+
+  fillRoundRect(badgeX, badgeY, badgeSize, badgeSize, 14, "#d72d2d");
+  ctx.save();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `800 ${Math.round(badgeSize * 0.22)}px Inter, Arial`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("HUAWEI", badgeX + badgeSize / 2, badgeY + badgeSize / 2 - 2);
+  ctx.restore();
+
+  ctx.save();
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = `400 ${Math.round(W * 0.017)}px Inter, Arial`;
+  ctx.fillText("Available on", badgeX + badgeSize + W * 0.015, badgeY + badgeSize * 0.42);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `700 ${Math.round(W * 0.024)}px Inter, Arial`;
+  ctx.fillText("HUAWEI AppGallery", badgeX + badgeSize + W * 0.015, badgeY + badgeSize * 0.82);
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "rgba(170,170,170,0.6)";
+  ctx.font = `400 ${Math.round(W * 0.013)}px Inter, Arial`;
+  ctx.textAlign = "left";
+  ctx.fillText("PREMIUM • SECURE • RELIABLE", padX, H - H * 0.022);
+  ctx.restore();
+}
+
+function drawGooglePlayFrame(img, title) {
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const bgGrad = ctx.createRadialGradient(W / 2, H * 0.2, 0, W / 2, H * 0.2, H);
+  bgGrad.addColorStop(0, "#ffffff");
+  bgGrad.addColorStop(0.4, "#f1f3f6");
+  bgGrad.addColorStop(1, "#e8ecf1");
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = "#a0a8b8";
+  const dotSpacing = 110;
+  for (let dx = dotSpacing / 2; dx < W; dx += dotSpacing) {
+    for (let dy = dotSpacing / 2; dy < H; dy += dotSpacing) {
+      ctx.beginPath();
+      ctx.arc(dx, dy, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
+  const padX = W * 0.05;
+  const titleTop = H * 0.055;
+  const titleSize = Math.round(W * 0.058);
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#1a2233";
+  ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
+
+  const headlineText = title || "DEAD HAND - Stay Safe,\nEven When You Can't.";
+  const titleLines = headlineText.split("\n").flatMap(line => wrap(line, W - padX * 2));
+  let ty = titleTop + titleSize;
+  const titleLH = titleSize * 1.15;
+  titleLines.forEach(line => {
+    ctx.fillText(line, padX + 10, ty);
+    ty += titleLH;
+  });
+
+  const deviceW = W * 0.58;
+  const deviceH = deviceW * (1280 / 620);
+  const deviceX = (W - deviceW) / 2;
+  const deviceY = ty + H * 0.04;
+  const devicePad = 14;
+  const outerRadius = 56;
+  const screenRadius = 46;
+
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.25)";
+  ctx.shadowBlur = 80;
+  ctx.shadowOffsetY = 40;
+  fillRoundRect(deviceX, deviceY, deviceW, deviceH, outerRadius, "#000000");
+  ctx.restore();
+
+  strokeRoundRect(deviceX, deviceY, deviceW, deviceH, outerRadius, "#1a1a1a", 2);
+
+  const screenX = deviceX + devicePad;
+  const screenY = deviceY + devicePad;
+  const screenW = deviceW - devicePad * 2;
+  const screenH = deviceH - devicePad * 2;
+
+  ctx.save();
+  roundRectPath(screenX, screenY, screenW, screenH, screenRadius);
+  ctx.clip();
+  if (img) {
+    fitImage(img, screenX, screenY, screenW, screenH);
+  } else {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(screenX, screenY, screenW, screenH);
+  }
+  ctx.restore();
+
+  const notchX = screenX + screenW / 2;
+  const notchY = screenY + 18;
+  ctx.beginPath();
+  ctx.arc(notchX, notchY, 7, 0, Math.PI * 2);
+  ctx.fillStyle = "#111";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(notchX, notchY, 4, 0, Math.PI * 2);
+  ctx.fillStyle = "#222";
+  ctx.fill();
+
+  const badgeY = deviceY + deviceH + H * 0.035;
+  const badgePadX = W * 0.028;
+  const badgePadY = W * 0.016;
+  const badgeText = "Available on Google Play";
+  const badgeFontSize = Math.round(W * 0.018);
+  ctx.font = `600 ${badgeFontSize}px Inter, Arial, sans-serif`;
+  const badgeTextW = ctx.measureText(badgeText).width;
+  const iconSize = badgeFontSize * 1.2;
+  const badgeW = badgeTextW + iconSize + badgePadX * 2 + 12;
+  const badgeH = badgeFontSize + badgePadY * 2 + 6;
+  const badgeX = (W - badgeW) / 2;
+
+  fillRoundRect(badgeX, badgeY, badgeW, badgeH, badgeH / 2, "#c8e6c9");
+
+  const iconX = badgeX + badgePadX;
+  const iconY = badgeY + badgeH / 2;
+  const triSize = iconSize * 0.55;
+  ctx.save();
+  ctx.translate(iconX, iconY);
+  ctx.beginPath();
+  ctx.moveTo(0, -triSize);
+  ctx.lineTo(triSize * 0.9, 0);
+  ctx.lineTo(0, triSize);
+  ctx.closePath();
+  ctx.fillStyle = "#1a73e8";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(0, -triSize);
+  ctx.lineTo(triSize * 0.9, 0);
+  ctx.lineTo(0, 0);
+  ctx.closePath();
+  ctx.fillStyle = "#34a853";
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(triSize * 0.9, 0);
+  ctx.lineTo(0, triSize);
+  ctx.closePath();
+  ctx.fillStyle = "#fbbc04";
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "#1a1a1a";
+  ctx.font = `600 ${badgeFontSize}px Inter, Arial, sans-serif`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText(badgeText, iconX + iconSize + 10, iconY + 1);
+  ctx.restore();
+}
+
+function drawMinimalFrame(img, x, y, w, h) {
+  fillRoundRect(x - 5, y - 5, w + 10, h + 10, 16, "#0c0f16");
+  strokeRoundRect(x - 5, y - 5, w + 10, h + 10, 16, "#3d4658", 2);
+  fitImage(img, x, y, w, h);
+  strokeRoundRect(x, y, w, h, 10, "#5a6478", 1.5);
+}
+
+// ---------- Main draw ----------
+function draw() {
+  const [W, H] = size();
+  canvas.width = W;
+  canvas.height = H;
+  ctx.fillStyle = settings.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  const f = $("format").value;
+
+  if (f === "icon") {
+    if (images[active]) fitImage(images[active], 0, 0, W, H);
+    updateValidation();
+    return;
+  }
+
+  if (settings.frame === "huawei") {
+    const title = settings.headline || "DEAD HAND";
+    const subtitle = settings.caption || "Safety • Will • SMS • Email";
+    drawHuaweiFrame(images[active] ? images[active].img : null, title, subtitle);
+    updateValidation();
+    return;
+  }
+
+  if (settings.frame === "googleplay") {
+    const title = settings.headline || "DEAD HAND - Stay Safe,\nEven When You Can't.";
+    drawGooglePlayFrame(images[active] ? images[active].img : null, title);
+    updateValidation();
+    return;
+  }
+
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, settings.bg);
+  grad.addColorStop(1, "#050812");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  const iw = W * 0.62;
+  const ih = (f === "landscape") ? H * 0.58 : H * 0.68;
+  const ix = (W - iw) / 2;
+  const iy = H * 0.26;
+
+  const head = settings.headline;
+  const cap = settings.caption;
+  ctx.textAlign = settings.align;
+  ctx.fillStyle = "#fff";
+  const tx = settings.align === "left" ? 70 : settings.align === "right" ? W - 70 : W / 2;
+
+  ctx.font = `800 ${settings.headlineSize}px Inter, Arial`;
+  const headlineLines = head ? wrap(head, W - 140) : [];
+  const headlineLH = settings.headlineSize * 1.08;
+  const totalHeadlineH = headlineLines.length * headlineLH;
+
+  const captionSize = Math.max(22, settings.headlineSize * 0.38);
+  ctx.font = `400 ${captionSize}px Inter, Arial`;
+  const captionLines = cap ? wrap(cap, W - 160) : [];
+  const captionLH = settings.headlineSize * 0.5;
+  const totalCaptionH = captionLines.length * captionLH;
+
+  const totalTextH = totalHeadlineH + (cap ? 6 + totalCaptionH : 0);
+  const textTop = (f === "feature") ? 40 : 60;
+  const gapTextToFrame = Math.max(24, H * 0.03);
+  let textBottomTarget = iy - gapTextToFrame;
+  let textStartY = textBottomTarget - totalTextH;
+  if (textStartY < textTop) textStartY = textTop;
+
+  ctx.font = `800 ${settings.headlineSize}px Inter, Arial`;
+  ctx.fillStyle = "#fff";
+  let y = textStartY + settings.headlineSize;
+  for (const line of headlineLines) {
+    ctx.fillText(line, tx, y);
+    y += headlineLH;
+  }
+
+  if (cap) {
+    ctx.font = `400 ${captionSize}px Inter, Arial`;
+    ctx.fillStyle = "#c5cee2";
+    y += 6;
+    for (const line of captionLines) {
+      ctx.fillText(line, tx, y);
+      y += captionLH;
+    }
+  }
+
+  if (images[active]) {
+    switch (settings.frame) {
+      case "iphone":
+        drawIPhoneFrame(images[active].img, ix, iy, iw, ih);
+        break;
+      case "android":
+        drawAndroidFrame(images[active].img, ix, iy, iw, ih);
+        break;
+      case "minimal":
+        drawMinimalFrame(images[active].img, ix, iy, iw, ih);
+        break;
+      case "none":
+      default:
+        fitImage(images[active].img, ix, iy, iw, ih);
+        break;
+    }
+  } else {
+    ctx.font = "400 22px Inter, Arial";
+    ctx.fillStyle = "#8e9ab5";
+    ctx.textAlign = "center";
+    ctx.fillText("Upload a screenshot to see it here", W / 2, iy + ih / 2);
+  }
+
+  updateValidation();
+}
+
+// ---------- gallery ----------
+function updateGallery() {
+  const g = $("gallery");
+  g.innerHTML = "";
+  images.forEach((im, i) => {
+    const d = document.createElement("div");
+    d.className = "thumb" + (i === active ? " active" : "");
+    d.innerHTML = `<img src="${im.src}" alt=""><span>${i + 1}. ${im.name}</span>`;
+    d.onclick = () => {
+      active = i;
+      updateGallery();
+      draw();
+    };
+    g.appendChild(d);
+  });
+  $("counter").textContent = images.length ? `${active + 1} / ${images.length}` : "0 / 0";
+  $("fileInfo").textContent = images.length
+    ? `${images.length} screenshot${images.length > 1 ? "s" : ""} loaded.`
+    : "No screenshots loaded.";
+}
+
+// ---------- validation ----------
+function updateValidation() {
+  const [W, H] = size();
+  const ratio = Math.max(W, H) / Math.min(W, H);
+  let items = [];
+
+  if (W >= 320 && H >= 320 && W <= 3840 && H <= 3840) {
+    items.push(`<div class="check ok">✓ Dimensions: ${W} × ${H}</div>`);
+  } else {
+    items.push(`<div class="check warn">⚠ Check dimensions (must be 320–3840 px)</div>`);
+  }
+  if (ratio <= 2) {
+    items.push(`<div class="check ok">✓ Aspect ratio is within 2:1</div>`);
+  } else {
+    items.push(`<div class="check warn">⚠ Aspect ratio exceeds 2:1</div>`);
+  }
+  if (images[active]) {
+    items.push(`<div class="check ok">✓ Source screenshot loaded</div>`);
+  } else {
+    items.push(`<div class="check warn">⚠ Upload a screenshot</div>`);
+  }
+
+  $("validation").innerHTML = items.join("");
+}
+
+// ---------- load files ----------
+$("files").addEventListener("change", async (e) => {
+  const selected = [...e.target.files].filter(f => f.type.startsWith("image/"));
+  images = [];
+  active = 0;
+  updateGallery();
+  draw();
+
+  if (!selected.length) return;
+
+  $("fileInfo").textContent = `Loading ${selected.length} screenshot${selected.length > 1 ? "s" : ""}...`;
+
+  for (const file of selected) {
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error("Could not read file"));
+        reader.readAsDataURL(file);
+      });
+      const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("Could not decode image"));
+        image.src = dataUrl;
+      });
+      images.push({ img, src: dataUrl, name: file.name });
+    } catch (err) {
+      console.error("Error loading file:", file.name, err);
+    }
+  }
+
+  images.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" }));
+  active = 0;
+  updateGallery();
+  draw();
+});
+
+// ---------- UI bindings ----------
+["format", "frame", "zoom", "pos", "headline", "caption", "bg", "headlineSize", "align", "cw", "ch"].forEach(id => {
+  $(id).addEventListener("input", () => {
+    if (id === "format") {
+      $("customBox").style.display = $("format").value === "custom" ? "block" : "none";
+    }
+    settings.bg = $("bg").value;
+    settings.zoom = +$("zoom").value;
+    settings.pos = +$("pos").value;
+    settings.headline = $("headline").value;
+    settings.caption = $("caption").value;
+    settings.headlineSize = +$("headlineSize").value;
+    settings.align = $("align").value;
+    settings.frame = $("frame").value;
+    draw();
+  });
+});
+
+// templates
+document.querySelectorAll("[data-template]").forEach(b => {
+  b.onclick = () => {
+    const t = b.dataset.template;
+    if (t === "clean") {
+      settings.bg = "#edf1f7";
+      $("bg").value = "#edf1f7";
+    }
+    if (t === "dark") {
+      settings.bg = "#090d18";
+      $("bg").value = "#090d18";
+    }
+    if (t === "blue") {
+      settings.bg = "#123b78";
+      $("bg").value = "#123b78";
+    }
+    if (t === "premium") {
+      settings.bg = "#161616";
+      $("bg").value = "#161616";
+      $("headlineSize").value = 64;
+    }
+    if (t === "huawei") {
+      settings.frame = "huawei";
+      $("frame").value = "huawei";
+      $("headline").value = $("headline").value || "DEAD HAND";
+      $("caption").value = $("caption").value || "Safety • Will • SMS • Email";
+    }
+    if (t === "huawei-dark") {
+      settings.frame = "huawei";
+      $("frame").value = "huawei";
+      settings.bg = "#0a0a0a";
+      $("bg").value = "#0a0a0a";
+      $("headline").value = $("headline").value || "DEAD HAND";
+      $("caption").value = $("caption").value || "Safety • Will • SMS • Email";
+    }
+    if (t === "googleplay") {
+      settings.frame = "googleplay";
+      $("frame").value = "googleplay";
+      $("headline").value = $("headline").value || "DEAD HAND - Stay Safe,\nEven When You Can't.";
+    }
+    if (t === "googleplay-light") {
+      settings.frame = "googleplay";
+      $("frame").value = "googleplay";
+      settings.bg = "#ffffff";
+      $("bg").value = "#ffffff";
+      $("headline").value = $("headline").value || "DEAD HAND - Stay Safe,\nEven When You Can't.";
+    }
+    settings.headline = $("headline").value;
+    settings.caption = $("caption").value;
+    settings.headlineSize = +$("headlineSize").value;
+    draw();
+  };
+});
+
+// ==========================================================
+// GAMEMONETIZE ASSET EXPORT
+// ==========================================================
+/**
+ * Renders the current screenshot at an exact target size,
+ * with no device frame — just the image "cover-fit" to fill.
+ */
+function renderGMAsset(targetW, targetH, img, bgColor) {
+  return new Promise(resolve => {
+    const off = document.createElement("canvas");
+    off.width = targetW;
+    off.height = targetH;
+    const octx = off.getContext("2d");
+
+    // Fill background first (fallback color)
+    octx.fillStyle = bgColor || "#0b1020";
+    octx.fillRect(0, 0, targetW, targetH);
+
+    if (img) {
+      // cover-fit the screenshot
+      const ir = img.width / img.height;
+      const rr = targetW / targetH;
+      let sw, sh;
+      if (ir > rr) { sh = targetH; sw = targetH * ir; }
+      else { sw = targetW; sh = targetW / ir; }
+      const dx = (targetW - sw) / 2;
+      const dy = (targetH - sh) / 2;
+      octx.drawImage(img, dx, dy, sw, sh);
+    }
+
+    off.toBlob(blob => resolve(blob), "image/png");
+  });
+}
+
+function downloadBlob(blob, filename) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+}
+
+// Single size buttons
+document.querySelectorAll("[data-gm]").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const key = btn.dataset.gm;
+    if (!images[active]) {
+      alert("Please upload a screenshot first.");
+      return;
+    }
+    const img = images[active].img;
+    const bg = settings.bg;
+
+    if (key === "512x384") {
+      const blob = await renderGMAsset(512, 384, img, bg);
+      downloadBlob(blob, "gamemonetize-512x384.png");
+    }
+    else if (key === "512x512") {
+      const blob = await renderGMAsset(512, 512, img, bg);
+      downloadBlob(blob, "gamemonetize-512x512.png");
+    }
+    else if (key === "512x340") {
+      const blob = await renderGMAsset(512, 340, img, bg);
+      downloadBlob(blob, "gamemonetize-512x340.png");
+    }
+    else if (key === "all") {
+      // Batch as ZIP
+      if (!window.JSZip) {
+        const s = document.createElement("script");
+        s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+        document.head.appendChild(s);
+        try {
+          await new Promise((res, rej) => {
+            s.onload = res;
+            s.onerror = () => rej(new Error("Failed to load JSZip"));
+          });
+        } catch (e) {
+          alert("Could not load ZIP library. Check your internet connection.");
+          return;
+        }
+      }
+      const zip = new JSZip();
+      const dims = [
+        { w: 512, h: 384, name: "gamemonetize-512x384.png" },
+        { w: 512, h: 512, name: "gamemonetize-512x512.png" },
+        { w: 512, h: 340, name: "gamemonetize-512x340.png" }
+      ];
+      for (const d of dims) {
+        const blob = await renderGMAsset(d.w, d.h, img, bg);
+        zip.file(d.name, blob);
+      }
+      const out = await zip.generateAsync({ type: "blob" });
+      downloadBlob(out, "gamemonetize-assets.zip");
+    }
+  });
+});
+// ==========================================================
+// END GAMEMONETIZE
+// ==========================================================
+
+// ---------- PNG blob helper ----------
+function blobPNG() {
+  return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+}
+
+// ---------- download current ----------
+$("download").onclick = async () => {
+  try {
+    const b = await blobPNG();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = `joheliv-playframe-${active + 1}.png`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  } catch (e) {
+    alert("Could not create PNG. Try again.");
+  }
+};
+
+// ---------- batch ----------
+async function renderIndex(i) {
+  active = i;
+  draw();
+  await new Promise(r => setTimeout(r, 80));
+  return blobPNG();
+}
+
+$("batch").onclick = async () => {
+  if (!images.length) return alert("Upload screenshots first.");
+  for (let i = 0; i < images.length; i++) {
+    try {
+      const b = await renderIndex(i);
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(b);
+      a.download = `joheliv-playframe-${i + 1}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      await new Promise(r => setTimeout(r, 180));
+    } catch (e) {
+      console.warn(`Failed to export image ${i + 1}`, e);
+    }
+  }
+  updateGallery();
+  draw();
+};
+
+// ---------- ZIP ----------
+$("zip").onclick = async () => {
+  if (!images.length) return alert("Upload screenshots first.");
+
+  if (!window.JSZip) {
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+    document.head.appendChild(s);
+    try {
+      await new Promise((res, rej) => {
+        s.onload = res;
+        s.onerror = () => rej(new Error("Failed to load JSZip"));
+      });
+    } catch (e) {
+      alert("Could not load ZIP library. Check your internet connection.");
+      return;
+    }
+  }
+
+  const zip = new JSZip();
+  for (let i = 0; i < images.length; i++) {
+    try {
+      const b = await renderIndex(i);
+      zip.file(`joheliv-playframe-${i + 1}.png`, b);
+    } catch (e) {
+      console.warn(`Failed to add image ${i + 1} to ZIP`, e);
+    }
+  }
+
+  const out = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(out);
+  a.download = "joheliv-playframe-assets.zip";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  updateGallery();
+  draw();
+};
+
+// ---------- reset ----------
+$("reset").onclick = () => {
+  images = [];
+  active = 0;
+  $("headline").value = "";
+  $("caption").value = "";
+  $("fileInfo").textContent = "No screenshots loaded.";
+  updateGallery();
+  draw();
+};
+
+// ---------- init ----------
+draw();
+</script>
+</body>
+</html>
