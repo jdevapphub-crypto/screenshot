@@ -7,10 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,sans-serif;background:#0b1020;color:#f5f7ff}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+body{font-family:Inter,Arial,sans-serif;background:#0b1020;color:#f5f7ff}
 button,input,select{font:inherit}
-.app{min-height:100vh;display:grid;grid-template-columns:380px 1fr}
-.sidebar{background:#11182b;border-right:1px solid #27314b;padding:22px;overflow:auto}
+.app{height:100vh;display:grid;grid-template-columns:380px 1fr;overflow:hidden}
+.sidebar{background:#11182b;border-right:1px solid #27314b;padding:22px;overflow-y:auto;overflow-x:hidden;height:100vh}
 .brand{font-size:22px;font-weight:800;margin-bottom:4px}.sub{color:#8e9ab5;font-size:13px;margin-bottom:22px}
 .section{border-top:1px solid #27314b;padding-top:18px;margin-top:18px}
 label{display:block;color:#aeb9d0;font-size:12px;font-weight:700;margin:12px 0 7px}
@@ -23,36 +24,38 @@ input[type=file]{display:none}
 button{border:0;border-radius:9px;padding:10px 12px;background:#273451;color:#fff;cursor:pointer;font-weight:700}
 button:hover{filter:brightness(1.15)}
 .primary{background:#4169e1}.danger{background:#7d2940}
-.gm{background:#7c3aed}
-.gm:hover{background:#8b5cf6}
 .full{width:100%;margin-top:9px}
 .template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .template-grid button{font-size:11px;padding:9px}
 .status{font-size:12px;line-height:1.55;color:#aeb9d0}
 .check{padding:8px 10px;border-radius:8px;background:#17213a;margin:5px 0}.ok{color:#70e1a1}.warn{color:#ffd166}
-.main{display:flex;flex-direction:column;min-width:0}
-.topbar{height:64px;border-bottom:1px solid #27314b;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.main{display:flex;flex-direction:column;height:100vh;min-width:0;overflow:hidden}
+.topbar{height:64px;flex:0 0 64px;border-bottom:1px solid #27314b;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
 .topbar span{color:#8e9ab5;font-size:13px}
-.workspace{flex:1;display:flex;align-items:center;justify-content:center;padding:28px;overflow:auto}
-.stage{position:relative;box-shadow:0 25px 80px #0008;border-radius:22px;overflow:hidden}
-canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height:auto}
-.gallery{border-top:1px solid #27314b;padding:14px;display:flex;gap:10px;overflow:auto;min-height:118px}
+.workspace{flex:1 1 auto;display:flex;align-items:center;justify-content:center;padding:28px;overflow:hidden;min-height:0}
+.stage{position:relative;box-shadow:0 25px 80px #0008;border-radius:22px;overflow:hidden;max-width:100%;max-height:100%}
+canvas{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.gallery{flex:0 0 auto;border-top:1px solid #27314b;padding:14px;display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;min-height:118px;max-height:118px}
 .thumb{position:relative;flex:0 0 150px;height:88px;border:1px solid #34405d;border-radius:9px;overflow:hidden;cursor:pointer;background:#080c17}
 .thumb img{width:100%;height:100%;object-fit:cover}.thumb.active{outline:2px solid #4169e1}
 .thumb span{position:absolute;bottom:0;left:0;right:0;background:#000b;padding:3px 6px;font-size:10px}
 .small{font-size:11px;color:#7f8ba5}
-
-/* GameMonetize asset panel */
 .gm-panel{background:#1a1235;border:1px solid #4c1d95;border-radius:12px;padding:14px;margin-top:10px}
-.gm-title{font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:10px;letter-spacing:0.5px}
+.gm-title{font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:10px;letter-spacing:.5px}
 .gm-grid{display:grid;grid-template-columns:1fr;gap:8px}
-.gm-btn{background:#7c3aed;color:#fff;border-radius:8px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;display:flex;justify-content:space-between;align-items:center}
+.gm-btn{background:#7c3aed;color:#fff;border-radius:8px;padding:10px 12px;font-size:12px;font-weight:700;text-align:left;display:flex;justify-content:space-between;align-items:center;width:100%}
 .gm-btn:hover{background:#8b5cf6}
 .gm-btn small{display:block;font-weight:400;color:#ddd6fe;font-size:10px;margin-top:2px}
-.gm-btn .dims{background:#0004;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700}
+.gm-btn .dims{background:#0004;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;white-space:nowrap}
 .gm-note{font-size:10px;color:#a78bfa;margin-top:10px;line-height:1.5}
-
-@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{max-height:none;border-right:0;border-bottom:1px solid #27314b}.workspace{min-height:55vh}canvas{max-width:92vw}}
+@media(max-width:900px){
+  html,body{overflow:auto}
+  .app{grid-template-columns:1fr;height:auto;overflow:visible}
+  .sidebar{height:auto;max-height:none;border-right:0;border-bottom:1px solid #27314b;overflow:visible}
+  .main{height:auto;overflow:visible}
+  .workspace{min-height:55vh;overflow:visible}
+  canvas{max-width:92vw}
+}
 </style>
 </head>
 <body>
@@ -94,10 +97,8 @@ canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height
       <option value="minimal">Minimal Border</option>
       <option value="none">No frame (full bleed)</option>
     </select>
-
     <label>Screenshot zoom</label>
     <input id="zoom" type="range" min="70" max="135" value="100">
-
     <label>Screenshot vertical position</label>
     <input id="pos" type="range" min="-35" max="35" value="0">
   </div>
@@ -132,7 +133,28 @@ canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height
     </div>
   </div>
 
-  <!-- ============ GAMEMONETIZE ASSET EXPORT ============ -->
+  <!-- EXPORT SETTINGS -->
+  <div class="section">
+    <label>Export</label>
+    <select id="expMode">
+      <option value="device">Device only (transparent, no background)</option>
+      <option value="full">Full marketing canvas</option>
+    </select>
+    <label>File type</label>
+    <select id="expType">
+      <option value="png">PNG (keeps transparency)</option>
+      <option value="jpg">JPG (no transparency)</option>
+    </select>
+    <div id="jpgBgBox" style="display:none">
+      <label>JPG fill color (JPG can't be transparent)</label>
+      <input id="expJpgBg" type="color" value="#ffffff">
+    </div>
+    <label>Output width in px (leave empty = native screenshot size)</label>
+    <input id="expWidth" type="text" placeholder="e.g. 1242">
+    <div id="sizeInfo" class="status check" style="margin-top:10px"></div>
+  </div>
+
+  <!-- GAMEMONETIZE ASSET EXPORT -->
   <div class="section">
     <label>GameMonetize Assets</label>
     <div class="gm-panel">
@@ -156,12 +178,11 @@ canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height
         </button>
       </div>
       <div class="gm-note">
-        💡 Exports the current screenshot rendered at the exact GameMonetize dimensions.
-        No frame is added — these are clean cover images.
+        💡 Exports the <b>full</b> screenshot — fit inside each size without cropping.
+        Uses contain-fit with a matching background.
       </div>
     </div>
   </div>
-  <!-- ============ END GAMEMONETIZE ============ -->
 
   <div class="section">
     <label>Validation</label>
@@ -169,7 +190,7 @@ canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height
   </div>
 
   <div class="section">
-    <button id="download" class="primary full">Download current PNG</button>
+    <button id="download" class="primary full">Download current</button>
     <button id="batch" class="primary full">Download all screenshots</button>
     <button id="zip" class="full">Download ZIP</button>
     <button id="reset" class="danger full">Reset project</button>
@@ -192,19 +213,14 @@ canvas{display:block;max-width:min(78vw,850px);max-height:78vh;width:auto;height
 // ---------- helpers ----------
 const $ = id => document.getElementById(id);
 const canvas = $("canvas");
-const ctx = canvas.getContext("2d");
+const mainCtx = canvas.getContext("2d");
+let ctx = mainCtx; // temporarily swapped to an offscreen context during export
 
 let images = [];
 let active = 0;
 let settings = {
-  bg: "#10182c",
-  headline: "",
-  caption: "",
-  zoom: 100,
-  pos: 0,
-  headlineSize: 58,
-  align: "center",
-  frame: "iphone"
+  bg: "#10182c", headline: "", caption: "", zoom: 100, pos: 0,
+  headlineSize: 58, align: "center", frame: "iphone"
 };
 
 // ---------- canvas size ----------
@@ -215,10 +231,7 @@ function size() {
   if (f === "landscape") return [1920, 1080];
   if (f === "feature") return [1024, 500];
   if (f === "icon") return [512, 512];
-  return [
-    parseInt($("cw").value) || 1080,
-    parseInt($("ch").value) || 1920
-  ];
+  return [parseInt($("cw").value) || 1080, parseInt($("ch").value) || 1920];
 }
 
 // ---------- draw helpers ----------
@@ -230,21 +243,15 @@ function fitImage(img, x, y, w, h) {
   else { sw = w; sh = w / ir; }
 
   const z = settings.zoom / 100;
-  sw *= z;
-  sh *= z;
+  sw *= z; sh *= z;
 
   const baseY = y + (h - sh) / 2;
   const yy = baseY + (settings.pos / 100) * h;
-
   const minY = y - (sh - h);
   const maxY = y;
   let finalY = yy;
-  if (sh > h) {
-    finalY = Math.min(maxY, Math.max(minY, yy));
-  } else {
-    finalY = y + (h - sh) / 2;
-  }
-
+  if (sh > h) finalY = Math.min(maxY, Math.max(minY, yy));
+  else finalY = y + (h - sh) / 2;
   const finalX = x + (w - sw) / 2;
 
   ctx.save();
@@ -255,22 +262,11 @@ function fitImage(img, x, y, w, h) {
   ctx.restore();
 }
 
-function roundRectPath(x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
-}
-
-function fillRoundRect(x, y, w, h, r, fill) {
-  roundRectPath(x, y, w, h, r);
-  ctx.fillStyle = fill;
-  ctx.fill();
-}
-
+function roundRectPath(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+function fillRoundRect(x, y, w, h, r, fill) { roundRectPath(x, y, w, h, r); ctx.fillStyle = fill; ctx.fill(); }
 function strokeRoundRect(x, y, w, h, r, stroke, lw) {
   roundRectPath(x, y, w, h, r);
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = lw || 2;
-  ctx.stroke();
+  ctx.strokeStyle = stroke; ctx.lineWidth = lw || 2; ctx.stroke();
 }
 
 function wrap(text, maxWidth) {
@@ -279,10 +275,8 @@ function wrap(text, maxWidth) {
   let line = "";
   for (const w of words) {
     const test = line ? line + " " + w : w;
-    if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line);
-      line = w;
-    } else line = test;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+    else line = test;
   }
   if (line) lines.push(line);
   return lines;
@@ -290,13 +284,9 @@ function wrap(text, maxWidth) {
 
 // ---------- Device Frame Renderers ----------
 function drawIPhoneFrame(img, x, y, w, h) {
-  const radius = 38;
-  const border = 12;
-  const innerRadius = radius - 4;
-  const innerX = x + border;
-  const innerY = y + border;
-  const innerW = w - border * 2;
-  const innerH = h - border * 2;
+  const radius = 38, border = 12, innerRadius = radius - 4;
+  const innerX = x + border, innerY = y + border;
+  const innerW = w - border * 2, innerH = h - border * 2;
 
   const grad = ctx.createLinearGradient(x, y, x + w, y + h);
   grad.addColorStop(0, "#2a2e36");
@@ -309,24 +299,19 @@ function drawIPhoneFrame(img, x, y, w, h) {
 
   fitImage(img, innerX, innerY, innerW, innerH);
 
-  const islandW = innerW * 0.32;
-  const islandH = 30;
-  const islandX = innerX + (innerW - islandW) / 2;
-  const islandY = innerY + 7;
+  const islandW = innerW * 0.32, islandH = 30;
+  const islandX = innerX + (innerW - islandW) / 2, islandY = innerY + 7;
   fillRoundRect(islandX, islandY, islandW, islandH, 16, "#000");
   ctx.beginPath();
   ctx.arc(islandX + islandW - 16, islandY + islandH / 2, 4.5, 0, Math.PI * 2);
   ctx.fillStyle = "#1a1e26";
   ctx.fill();
 
-  const barW = innerW * 0.35;
-  const barH = 4.5;
-  const barX = innerX + (innerW - barW) / 2;
-  const barY = innerY + innerH - barH - 7;
+  const barW = innerW * 0.35, barH = 4.5;
+  const barX = innerX + (innerW - barW) / 2, barY = innerY + innerH - barH - 7;
   fillRoundRect(barX, barY, barW, barH, 2.5, "#e8ecf2");
 
-  const btnW = 3.5;
-  const btnH = 55;
+  const btnW = 3.5, btnH = 55;
   fillRoundRect(x - 2, y + h * 0.18, btnW, btnH, 2, "#3a3f4a");
   fillRoundRect(x - 2, y + h * 0.18 + btnH + 10, btnW, btnH, 2, "#3a3f4a");
   fillRoundRect(x + w - 2, y + h * 0.22, btnW, btnH * 1.2, 2, "#3a3f4a");
@@ -342,13 +327,9 @@ function drawIPhoneFrame(img, x, y, w, h) {
 }
 
 function drawAndroidFrame(img, x, y, w, h) {
-  const radius = 32;
-  const border = 10;
-  const innerRadius = radius - 4;
-  const innerX = x + border;
-  const innerY = y + border;
-  const innerW = w - border * 2;
-  const innerH = h - border * 2;
+  const radius = 32, border = 10, innerRadius = radius - 4;
+  const innerX = x + border, innerY = y + border;
+  const innerW = w - border * 2, innerH = h - border * 2;
 
   const grad = ctx.createLinearGradient(x, y, x + w, y + h);
   grad.addColorStop(0, "#22262e");
@@ -361,26 +342,15 @@ function drawAndroidFrame(img, x, y, w, h) {
 
   fitImage(img, innerX, innerY, innerW, innerH);
 
-  const holeR = 12;
-  const holeX = innerX + innerW / 2;
-  const holeY = innerY + 16;
-  ctx.beginPath();
-  ctx.arc(holeX, holeY, holeR, 0, Math.PI * 2);
-  ctx.fillStyle = "#000";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(holeX - 3.5, holeY - 3.5, 3.5, 0, Math.PI * 2);
-  ctx.fillStyle = "#1e2430";
-  ctx.fill();
+  const holeR = 12, holeX = innerX + innerW / 2, holeY = innerY + 16;
+  ctx.beginPath(); ctx.arc(holeX, holeY, holeR, 0, Math.PI * 2); ctx.fillStyle = "#000"; ctx.fill();
+  ctx.beginPath(); ctx.arc(holeX - 3.5, holeY - 3.5, 3.5, 0, Math.PI * 2); ctx.fillStyle = "#1e2430"; ctx.fill();
 
-  const navW = innerW * 0.3;
-  const navH = 4.5;
-  const navX = innerX + (innerW - navW) / 2;
-  const navY = innerY + innerH - navH - 8;
+  const navW = innerW * 0.3, navH = 4.5;
+  const navX = innerX + (innerW - navW) / 2, navY = innerY + innerH - navH - 8;
   fillRoundRect(navX, navY, navW, navH, 2.5, "#8b95a8");
 
-  const btnW = 3.5;
-  const btnH = 45;
+  const btnW = 3.5, btnH = 45;
   fillRoundRect(x - 2, y + h * 0.2, btnW, btnH, 2, "#2e333d");
   fillRoundRect(x - 2, y + h * 0.2 + btnH + 8, btnW, btnH, 2, "#2e333d");
   fillRoundRect(x + w - 2, y + h * 0.24, btnW, btnH * 1.1, 2, "#2e333d");
@@ -396,8 +366,7 @@ function drawAndroidFrame(img, x, y, w, h) {
 }
 
 function drawHuaweiFrame(img, title, subtitle) {
-  const W = canvas.width;
-  const H = canvas.height;
+  const W = canvas.width, H = canvas.height;
 
   const bgGrad = ctx.createRadialGradient(W / 2, H * 0.15, H * 0.05, W / 2, H * 0.5, H * 0.95);
   bgGrad.addColorStop(0, "#1e1e1e");
@@ -422,18 +391,13 @@ function drawHuaweiFrame(img, title, subtitle) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   for (let i = 0; i < 2200; i++) {
-    const nx = Math.random() * W;
-    const ny = Math.random() * H;
-    const r = Math.random() * 2 + 0.4;
+    const nx = Math.random() * W, ny = Math.random() * H, r = Math.random() * 2 + 0.4;
     ctx.fillStyle = Math.random() > 0.5 ? "#ffffff" : "#000000";
-    ctx.beginPath();
-    ctx.arc(nx, ny, r, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(nx, ny, r, 0, Math.PI * 2); ctx.fill();
   }
   ctx.restore();
 
-  const padX = W * 0.06;
-  const titleTop = H * 0.058;
+  const padX = W * 0.06, titleTop = H * 0.058;
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff";
@@ -441,29 +405,19 @@ function drawHuaweiFrame(img, title, subtitle) {
   ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
   const titleLines = title ? wrap(title.toUpperCase(), W - padX * 2) : [];
   let ty = titleTop + titleSize;
-  titleLines.forEach(line => {
-    ctx.fillText(line, W / 2, ty);
-    ty += titleSize * 1.05;
-  });
+  titleLines.forEach(line => { ctx.fillText(line, W / 2, ty); ty += titleSize * 1.05; });
 
   const subSize = Math.round(W * 0.026);
   ctx.font = `400 ${subSize}px Inter, Arial, sans-serif`;
   ctx.fillStyle = "rgba(255,255,255,0.9)";
   const subLines = subtitle ? wrap(subtitle, W - padX * 2) : [];
   ty += subSize * 0.4;
-  subLines.forEach(line => {
-    ctx.fillText(line, W / 2, ty);
-    ty += subSize * 1.35;
-  });
+  subLines.forEach(line => { ctx.fillText(line, W / 2, ty); ty += subSize * 1.35; });
 
   const deviceTop = ty + H * 0.04;
-  const deviceW = W * 0.52;
-  const deviceH = deviceW * (19.5 / 9);
-  const deviceX = (W - deviceW) / 2;
-  const deviceY = deviceTop;
-  const devicePad = 14;
-  const outerRadius = 52;
-  const screenRadius = 42;
+  const deviceW = W * 0.52, deviceH = deviceW * (19.5 / 9);
+  const deviceX = (W - deviceW) / 2, deviceY = deviceTop;
+  const devicePad = 14, outerRadius = 52, screenRadius = 42;
 
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.9)";
@@ -480,44 +434,27 @@ function drawHuaweiFrame(img, title, subtitle) {
   strokeRoundRect(deviceX + 1, deviceY + 1, deviceW - 2, deviceH - 2, outerRadius - 1, "rgba(220,20,20,0.25)", 3);
   ctx.restore();
 
-  const screenX = deviceX + devicePad;
-  const screenY = deviceY + devicePad;
-  const screenW = deviceW - devicePad * 2;
-  const screenH = deviceH - devicePad * 2;
+  const screenX = deviceX + devicePad, screenY = deviceY + devicePad;
+  const screenW = deviceW - devicePad * 2, screenH = deviceH - devicePad * 2;
 
   ctx.save();
   roundRectPath(screenX, screenY, screenW, screenH, screenRadius);
   ctx.clip();
-  if (img) {
-    fitImage(img, screenX, screenY, screenW, screenH);
-  } else {
-    ctx.fillStyle = "#0e0e0e";
-    ctx.fillRect(screenX, screenY, screenW, screenH);
-  }
+  if (img) fitImage(img, screenX, screenY, screenW, screenH);
+  else { ctx.fillStyle = "#0e0e0e"; ctx.fillRect(screenX, screenY, screenW, screenH); }
   ctx.restore();
 
   strokeRoundRect(screenX, screenY, screenW, screenH, screenRadius, "rgba(255,255,255,0.06)", 2);
 
-  const notchW = screenW * 0.19;
-  const notchH = 26;
-  const notchX = screenX + (screenW - notchW) / 2;
-  const notchY = screenY;
+  const notchW = screenW * 0.19, notchH = 26;
+  const notchX = screenX + (screenW - notchW) / 2, notchY = screenY;
   roundRectPath(notchX, notchY, notchW, notchH, 0);
-  ctx.fillStyle = "#000";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 9, 0, Math.PI * 2);
-  ctx.fillStyle = "#111";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 5, 0, Math.PI * 2);
-  ctx.fillStyle = "#1a1a1a";
-  ctx.fill();
+  ctx.fillStyle = "#000"; ctx.fill();
+  ctx.beginPath(); ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 9, 0, Math.PI * 2); ctx.fillStyle = "#111"; ctx.fill();
+  ctx.beginPath(); ctx.arc(notchX + notchW / 2, notchY + notchH / 2 + 2, 5, 0, Math.PI * 2); ctx.fillStyle = "#1a1a1a"; ctx.fill();
 
   const footerY = deviceY + deviceH + H * 0.045;
-  const badgeSize = W * 0.052;
-  const badgeX = padX;
-  const badgeY = footerY;
+  const badgeSize = W * 0.052, badgeX = padX, badgeY = footerY;
 
   fillRoundRect(badgeX, badgeY, badgeSize, badgeSize, 14, "#d72d2d");
   ctx.save();
@@ -534,7 +471,6 @@ function drawHuaweiFrame(img, title, subtitle) {
   ctx.fillStyle = "rgba(255,255,255,0.8)";
   ctx.font = `400 ${Math.round(W * 0.017)}px Inter, Arial`;
   ctx.fillText("Available on", badgeX + badgeSize + W * 0.015, badgeY + badgeSize * 0.42);
-
   ctx.fillStyle = "#ffffff";
   ctx.font = `700 ${Math.round(W * 0.024)}px Inter, Arial`;
   ctx.fillText("HUAWEI AppGallery", badgeX + badgeSize + W * 0.015, badgeY + badgeSize * 0.82);
@@ -549,8 +485,7 @@ function drawHuaweiFrame(img, title, subtitle) {
 }
 
 function drawGooglePlayFrame(img, title) {
-  const W = canvas.width;
-  const H = canvas.height;
+  const W = canvas.width, H = canvas.height;
 
   const bgGrad = ctx.createRadialGradient(W / 2, H * 0.2, 0, W / 2, H * 0.2, H);
   bgGrad.addColorStop(0, "#ffffff");
@@ -565,16 +500,12 @@ function drawGooglePlayFrame(img, title) {
   const dotSpacing = 110;
   for (let dx = dotSpacing / 2; dx < W; dx += dotSpacing) {
     for (let dy = dotSpacing / 2; dy < H; dy += dotSpacing) {
-      ctx.beginPath();
-      ctx.arc(dx, dy, 1.5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(dx, dy, 1.5, 0, Math.PI * 2); ctx.fill();
     }
   }
   ctx.restore();
 
-  const padX = W * 0.05;
-  const titleTop = H * 0.055;
-  const titleSize = Math.round(W * 0.058);
+  const padX = W * 0.05, titleTop = H * 0.055, titleSize = Math.round(W * 0.058);
   ctx.textAlign = "left";
   ctx.fillStyle = "#1a2233";
   ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
@@ -583,18 +514,11 @@ function drawGooglePlayFrame(img, title) {
   const titleLines = headlineText.split("\n").flatMap(line => wrap(line, W - padX * 2));
   let ty = titleTop + titleSize;
   const titleLH = titleSize * 1.15;
-  titleLines.forEach(line => {
-    ctx.fillText(line, padX + 10, ty);
-    ty += titleLH;
-  });
+  titleLines.forEach(line => { ctx.fillText(line, padX + 10, ty); ty += titleLH; });
 
-  const deviceW = W * 0.58;
-  const deviceH = deviceW * (1280 / 620);
-  const deviceX = (W - deviceW) / 2;
-  const deviceY = ty + H * 0.04;
-  const devicePad = 14;
-  const outerRadius = 56;
-  const screenRadius = 46;
+  const deviceW = W * 0.58, deviceH = deviceW * (1280 / 620);
+  const deviceX = (W - deviceW) / 2, deviceY = ty + H * 0.04;
+  const devicePad = 14, outerRadius = 56, screenRadius = 46;
 
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.25)";
@@ -605,36 +529,22 @@ function drawGooglePlayFrame(img, title) {
 
   strokeRoundRect(deviceX, deviceY, deviceW, deviceH, outerRadius, "#1a1a1a", 2);
 
-  const screenX = deviceX + devicePad;
-  const screenY = deviceY + devicePad;
-  const screenW = deviceW - devicePad * 2;
-  const screenH = deviceH - devicePad * 2;
+  const screenX = deviceX + devicePad, screenY = deviceY + devicePad;
+  const screenW = deviceW - devicePad * 2, screenH = deviceH - devicePad * 2;
 
   ctx.save();
   roundRectPath(screenX, screenY, screenW, screenH, screenRadius);
   ctx.clip();
-  if (img) {
-    fitImage(img, screenX, screenY, screenW, screenH);
-  } else {
-    ctx.fillStyle = "#000";
-    ctx.fillRect(screenX, screenY, screenW, screenH);
-  }
+  if (img) fitImage(img, screenX, screenY, screenW, screenH);
+  else { ctx.fillStyle = "#000"; ctx.fillRect(screenX, screenY, screenW, screenH); }
   ctx.restore();
 
-  const notchX = screenX + screenW / 2;
-  const notchY = screenY + 18;
-  ctx.beginPath();
-  ctx.arc(notchX, notchY, 7, 0, Math.PI * 2);
-  ctx.fillStyle = "#111";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(notchX, notchY, 4, 0, Math.PI * 2);
-  ctx.fillStyle = "#222";
-  ctx.fill();
+  const notchX = screenX + screenW / 2, notchY = screenY + 18;
+  ctx.beginPath(); ctx.arc(notchX, notchY, 7, 0, Math.PI * 2); ctx.fillStyle = "#111"; ctx.fill();
+  ctx.beginPath(); ctx.arc(notchX, notchY, 4, 0, Math.PI * 2); ctx.fillStyle = "#222"; ctx.fill();
 
   const badgeY = deviceY + deviceH + H * 0.035;
-  const badgePadX = W * 0.028;
-  const badgePadY = W * 0.016;
+  const badgePadX = W * 0.028, badgePadY = W * 0.016;
   const badgeText = "Available on Google Play";
   const badgeFontSize = Math.round(W * 0.018);
   ctx.font = `600 ${badgeFontSize}px Inter, Arial, sans-serif`;
@@ -646,32 +556,16 @@ function drawGooglePlayFrame(img, title) {
 
   fillRoundRect(badgeX, badgeY, badgeW, badgeH, badgeH / 2, "#c8e6c9");
 
-  const iconX = badgeX + badgePadX;
-  const iconY = badgeY + badgeH / 2;
+  const iconX = badgeX + badgePadX, iconY = badgeY + badgeH / 2;
   const triSize = iconSize * 0.55;
   ctx.save();
   ctx.translate(iconX, iconY);
-  ctx.beginPath();
-  ctx.moveTo(0, -triSize);
-  ctx.lineTo(triSize * 0.9, 0);
-  ctx.lineTo(0, triSize);
-  ctx.closePath();
-  ctx.fillStyle = "#1a73e8";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(0, -triSize);
-  ctx.lineTo(triSize * 0.9, 0);
-  ctx.lineTo(0, 0);
-  ctx.closePath();
-  ctx.fillStyle = "#34a853";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(triSize * 0.9, 0);
-  ctx.lineTo(0, triSize);
-  ctx.closePath();
-  ctx.fillStyle = "#fbbc04";
-  ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, -triSize); ctx.lineTo(triSize * 0.9, 0); ctx.lineTo(0, triSize); ctx.closePath();
+  ctx.fillStyle = "#1a73e8"; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, -triSize); ctx.lineTo(triSize * 0.9, 0); ctx.lineTo(0, 0); ctx.closePath();
+  ctx.fillStyle = "#34a853"; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(triSize * 0.9, 0); ctx.lineTo(0, triSize); ctx.closePath();
+  ctx.fillStyle = "#fbbc04"; ctx.fill();
   ctx.restore();
 
   ctx.save();
@@ -692,6 +586,7 @@ function drawMinimalFrame(img, x, y, w, h) {
 
 // ---------- Main draw ----------
 function draw() {
+  ctx = mainCtx;
   const [W, H] = size();
   canvas.width = W;
   canvas.height = H;
@@ -701,7 +596,7 @@ function draw() {
   const f = $("format").value;
 
   if (f === "icon") {
-    if (images[active]) fitImage(images[active], 0, 0, W, H);
+    if (images[active]) fitImage(images[active].img, 0, 0, W, H);
     updateValidation();
     return;
   }
@@ -732,8 +627,7 @@ function draw() {
   const ix = (W - iw) / 2;
   const iy = H * 0.26;
 
-  const head = settings.headline;
-  const cap = settings.caption;
+  const head = settings.headline, cap = settings.caption;
   ctx.textAlign = settings.align;
   ctx.fillStyle = "#fff";
   const tx = settings.align === "left" ? 70 : settings.align === "right" ? W - 70 : W / 2;
@@ -752,44 +646,23 @@ function draw() {
   const totalTextH = totalHeadlineH + (cap ? 6 + totalCaptionH : 0);
   const textTop = (f === "feature") ? 40 : 60;
   const gapTextToFrame = Math.max(24, H * 0.03);
-  let textBottomTarget = iy - gapTextToFrame;
-  let textStartY = textBottomTarget - totalTextH;
+  let textStartY = iy - gapTextToFrame - totalTextH;
   if (textStartY < textTop) textStartY = textTop;
 
   ctx.font = `800 ${settings.headlineSize}px Inter, Arial`;
   ctx.fillStyle = "#fff";
   let y = textStartY + settings.headlineSize;
-  for (const line of headlineLines) {
-    ctx.fillText(line, tx, y);
-    y += headlineLH;
-  }
+  for (const line of headlineLines) { ctx.fillText(line, tx, y); y += headlineLH; }
 
   if (cap) {
     ctx.font = `400 ${captionSize}px Inter, Arial`;
     ctx.fillStyle = "#c5cee2";
     y += 6;
-    for (const line of captionLines) {
-      ctx.fillText(line, tx, y);
-      y += captionLH;
-    }
+    for (const line of captionLines) { ctx.fillText(line, tx, y); y += captionLH; }
   }
 
   if (images[active]) {
-    switch (settings.frame) {
-      case "iphone":
-        drawIPhoneFrame(images[active].img, ix, iy, iw, ih);
-        break;
-      case "android":
-        drawAndroidFrame(images[active].img, ix, iy, iw, ih);
-        break;
-      case "minimal":
-        drawMinimalFrame(images[active].img, ix, iy, iw, ih);
-        break;
-      case "none":
-      default:
-        fitImage(images[active].img, ix, iy, iw, ih);
-        break;
-    }
+    drawDeviceByFrame(images[active].img, ix, iy, iw, ih);
   } else {
     ctx.font = "400 22px Inter, Arial";
     ctx.fillStyle = "#8e9ab5";
@@ -808,11 +681,7 @@ function updateGallery() {
     const d = document.createElement("div");
     d.className = "thumb" + (i === active ? " active" : "");
     d.innerHTML = `<img src="${im.src}" alt=""><span>${i + 1}. ${im.name}</span>`;
-    d.onclick = () => {
-      active = i;
-      updateGallery();
-      draw();
-    };
+    d.onclick = () => { active = i; updateGallery(); draw(); };
     g.appendChild(d);
   });
   $("counter").textContent = images.length ? `${active + 1} / ${images.length}` : "0 / 0";
@@ -825,25 +694,19 @@ function updateGallery() {
 function updateValidation() {
   const [W, H] = size();
   const ratio = Math.max(W, H) / Math.min(W, H);
-  let items = [];
+  const items = [];
 
-  if (W >= 320 && H >= 320 && W <= 3840 && H <= 3840) {
-    items.push(`<div class="check ok">✓ Dimensions: ${W} × ${H}</div>`);
-  } else {
-    items.push(`<div class="check warn">⚠ Check dimensions (must be 320–3840 px)</div>`);
-  }
-  if (ratio <= 2) {
-    items.push(`<div class="check ok">✓ Aspect ratio is within 2:1</div>`);
-  } else {
-    items.push(`<div class="check warn">⚠ Aspect ratio exceeds 2:1</div>`);
-  }
-  if (images[active]) {
-    items.push(`<div class="check ok">✓ Source screenshot loaded</div>`);
-  } else {
-    items.push(`<div class="check warn">⚠ Upload a screenshot</div>`);
-  }
+  if (W >= 320 && H >= 320 && W <= 3840 && H <= 3840) items.push(`<div class="check ok">✓ Dimensions: ${W} × ${H}</div>`);
+  else items.push(`<div class="check warn">⚠ Check dimensions (must be 320–3840 px)</div>`);
+
+  if (ratio <= 2) items.push(`<div class="check ok">✓ Aspect ratio is within 2:1</div>`);
+  else items.push(`<div class="check warn">⚠ Aspect ratio exceeds 2:1</div>`);
+
+  if (images[active]) items.push(`<div class="check ok">✓ Source screenshot loaded</div>`);
+  else items.push(`<div class="check warn">⚠ Upload a screenshot</div>`);
 
   $("validation").innerHTML = items.join("");
+  updateSizeReadout();
 }
 
 // ---------- load files ----------
@@ -853,7 +716,6 @@ $("files").addEventListener("change", async (e) => {
   active = 0;
   updateGallery();
   draw();
-
   if (!selected.length) return;
 
   $("fileInfo").textContent = `Loading ${selected.length} screenshot${selected.length > 1 ? "s" : ""}...`;
@@ -887,9 +749,7 @@ $("files").addEventListener("change", async (e) => {
 // ---------- UI bindings ----------
 ["format", "frame", "zoom", "pos", "headline", "caption", "bg", "headlineSize", "align", "cw", "ch"].forEach(id => {
   $(id).addEventListener("input", () => {
-    if (id === "format") {
-      $("customBox").style.display = $("format").value === "custom" ? "block" : "none";
-    }
+    if (id === "format") $("customBox").style.display = $("format").value === "custom" ? "block" : "none";
     settings.bg = $("bg").value;
     settings.zoom = +$("zoom").value;
     settings.pos = +$("pos").value;
@@ -906,48 +766,23 @@ $("files").addEventListener("change", async (e) => {
 document.querySelectorAll("[data-template]").forEach(b => {
   b.onclick = () => {
     const t = b.dataset.template;
-    if (t === "clean") {
-      settings.bg = "#edf1f7";
-      $("bg").value = "#edf1f7";
-    }
-    if (t === "dark") {
-      settings.bg = "#090d18";
-      $("bg").value = "#090d18";
-    }
-    if (t === "blue") {
-      settings.bg = "#123b78";
-      $("bg").value = "#123b78";
-    }
-    if (t === "premium") {
-      settings.bg = "#161616";
-      $("bg").value = "#161616";
-      $("headlineSize").value = 64;
-    }
-    if (t === "huawei") {
-      settings.frame = "huawei";
-      $("frame").value = "huawei";
+    const setBg = c => { settings.bg = c; $("bg").value = c; };
+    const setFrame = fr => { settings.frame = fr; $("frame").value = fr; };
+    const hd = "DEAD HAND - Stay Safe,\nEven When You Can't.";
+    if (t === "clean") setBg("#edf1f7");
+    if (t === "dark") setBg("#090d18");
+    if (t === "blue") setBg("#123b78");
+    if (t === "premium") { setBg("#161616"); $("headlineSize").value = 64; }
+    if (t === "huawei" || t === "huawei-dark") {
+      setFrame("huawei");
+      if (t === "huawei-dark") setBg("#0a0a0a");
       $("headline").value = $("headline").value || "DEAD HAND";
       $("caption").value = $("caption").value || "Safety • Will • SMS • Email";
     }
-    if (t === "huawei-dark") {
-      settings.frame = "huawei";
-      $("frame").value = "huawei";
-      settings.bg = "#0a0a0a";
-      $("bg").value = "#0a0a0a";
-      $("headline").value = $("headline").value || "DEAD HAND";
-      $("caption").value = $("caption").value || "Safety • Will • SMS • Email";
-    }
-    if (t === "googleplay") {
-      settings.frame = "googleplay";
-      $("frame").value = "googleplay";
-      $("headline").value = $("headline").value || "DEAD HAND - Stay Safe,\nEven When You Can't.";
-    }
-    if (t === "googleplay-light") {
-      settings.frame = "googleplay";
-      $("frame").value = "googleplay";
-      settings.bg = "#ffffff";
-      $("bg").value = "#ffffff";
-      $("headline").value = $("headline").value || "DEAD HAND - Stay Safe,\nEven When You Can't.";
+    if (t === "googleplay" || t === "googleplay-light") {
+      setFrame("googleplay");
+      if (t === "googleplay-light") setBg("#ffffff");
+      $("headline").value = $("headline").value || hd;
     }
     settings.headline = $("headline").value;
     settings.caption = $("caption").value;
@@ -957,147 +792,176 @@ document.querySelectorAll("[data-template]").forEach(b => {
 });
 
 // ==========================================================
-// GAMEMONETIZE ASSET EXPORT
+// EXPORT — true size, transparent device-only, PNG / JPG
 // ==========================================================
-/**
- * Renders the current screenshot at an exact target size,
- * with no device frame — just the image "cover-fit" to fill.
- */
-function renderGMAsset(targetW, targetH, img, bgColor) {
-  return new Promise(resolve => {
-    const off = document.createElement("canvas");
-    off.width = targetW;
-    off.height = targetH;
-    const octx = off.getContext("2d");
+const FRAME_METRICS = {
+  iphone:     { b: 12, pad: 6 },
+  android:    { b: 10, pad: 6 },
+  huawei:     { b: 14, pad: 4 },
+  googleplay: { b: 14, pad: 4 },
+  minimal:    { b: 0,  pad: 8 },
+  none:       { b: 0,  pad: 0 }
+};
+const REF_INNER_W = 600; // design units for the screen width
 
-    // Fill background first (fallback color)
-    octx.fillStyle = bgColor || "#0b1020";
-    octx.fillRect(0, 0, targetW, targetH);
-
-    if (img) {
-      // cover-fit the screenshot
-      const ir = img.width / img.height;
-      const rr = targetW / targetH;
-      let sw, sh;
-      if (ir > rr) { sh = targetH; sw = targetH * ir; }
-      else { sw = targetW; sh = targetW / ir; }
-      const dx = (targetW - sw) / 2;
-      const dy = (targetH - sh) / 2;
-      octx.drawImage(img, dx, dy, sw, sh);
-    }
-
-    off.toBlob(blob => resolve(blob), "image/png");
-  });
+function exportOpts() {
+  return {
+    mode: $("expMode").value,
+    type: $("expType").value,
+    jpgBg: $("expJpgBg").value,
+    outW: parseInt($("expWidth").value) || 0
+  };
 }
 
-function downloadBlob(blob, filename) {
+function deviceGeometry(img, outW) {
+  const m = FRAME_METRICS[settings.frame] || FRAME_METRICS.iphone;
+  const innerW = REF_INNER_W;
+  const innerH = REF_INNER_W * img.height / img.width;
+  const devW = innerW + m.b * 2;
+  const devH = innerH + m.b * 2;
+  const refW = devW + m.pad * 2;
+  const refH = devH + m.pad * 2;
+  // native: the screen area equals the screenshot's real pixel width
+  const s = outW ? outW / refW : img.width / innerW;
+  return { m, innerH, devW, devH, refW, refH, s, W: Math.round(refW * s), H: Math.round(refH * s) };
+}
+
+function drawBlackPhone(img, x, y, w, h) {
+  fillRoundRect(x, y, w, h, 52, "#000");
+  strokeRoundRect(x + 1, y + 1, w - 2, h - 2, 51, "#2a2a2a", 2);
+  const pad = 14;
+  const sx = x + pad, sy = y + pad, sw = w - pad * 2, sh = h - pad * 2;
+  ctx.save();
+  roundRectPath(sx, sy, sw, sh, 42);
+  ctx.clip();
+  fitImage(img, sx, sy, sw, sh);
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(sx + sw / 2, sy + 18, 8, 0, Math.PI * 2);
+  ctx.fillStyle = "#111";
+  ctx.fill();
+}
+
+function drawDeviceByFrame(img, x, y, w, h) {
+  switch (settings.frame) {
+    case "iphone":  drawIPhoneFrame(img, x, y, w, h); break;
+    case "android": drawAndroidFrame(img, x, y, w, h); break;
+    case "minimal": drawMinimalFrame(img, x, y, w, h); break;
+    case "huawei":
+    case "googleplay": drawBlackPhone(img, x, y, w, h); break;
+    default: fitImage(img, x, y, w, h);
+  }
+}
+
+function canvasToBlob(c, type) {
+  return new Promise(res => c.toBlob(res, type === "jpg" ? "image/jpeg" : "image/png", 0.95));
+}
+
+async function renderExport(i, o) {
+  if (o.mode === "full") {
+    active = i;
+    draw();
+    await new Promise(r => setTimeout(r, 80));
+    return { blob: await canvasToBlob(canvas, o.type), w: canvas.width, h: canvas.height };
+  }
+  const img = images[i].img;
+  const g = deviceGeometry(img, o.outW);
+  const off = document.createElement("canvas");
+  off.width = g.W;
+  off.height = g.H;
+  const octx = off.getContext("2d");
+  if (o.type === "jpg") { // JPG has no alpha, so fill
+    octx.fillStyle = o.jpgBg;
+    octx.fillRect(0, 0, g.W, g.H);
+  }
+  ctx = octx;
+  try {
+    ctx.save();
+    ctx.scale(g.W / g.refW, g.H / g.refH);
+    drawDeviceByFrame(img, g.m.pad, g.m.pad, g.devW, g.devH);
+    ctx.restore();
+  } finally {
+    ctx = mainCtx;
+  }
+  return { blob: await canvasToBlob(off, o.type), w: g.W, h: g.H };
+}
+
+function exportName(i, o, r) {
+  return `joheliv-${o.mode === "device" ? "device" : "canvas"}-${i + 1}-${r.w}x${r.h}.${o.type}`;
+}
+
+function saveBlob(blob, name) {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = filename;
+  a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 3000);
 }
 
-// Single size buttons
-document.querySelectorAll("[data-gm]").forEach(btn => {
-  btn.addEventListener("click", async () => {
-    const key = btn.dataset.gm;
-    if (!images[active]) {
-      alert("Please upload a screenshot first.");
-      return;
-    }
-    const img = images[active].img;
-    const bg = settings.bg;
+function updateSizeReadout() {
+  const el = $("sizeInfo");
+  if (!el) return;
+  const o = exportOpts();
+  $("jpgBgBox").style.display = o.type === "jpg" ? "block" : "none";
+  if (o.mode === "full") {
+    el.innerHTML = `Output: <b>${canvas.width} × ${canvas.height} px</b>`;
+    return;
+  }
+  if (!images[active]) {
+    el.textContent = "Upload a screenshot to see the output size.";
+    return;
+  }
+  const g = deviceGeometry(images[active].img, o.outW);
+  el.innerHTML = `Output: <b>${g.W} × ${g.H} px</b><br>Screen area: ${Math.round(REF_INNER_W * g.s)} × ${Math.round(g.innerH * g.s)} px`;
+}
 
-    if (key === "512x384") {
-      const blob = await renderGMAsset(512, 384, img, bg);
-      downloadBlob(blob, "gamemonetize-512x384.png");
-    }
-    else if (key === "512x512") {
-      const blob = await renderGMAsset(512, 512, img, bg);
-      downloadBlob(blob, "gamemonetize-512x512.png");
-    }
-    else if (key === "512x340") {
-      const blob = await renderGMAsset(512, 340, img, bg);
-      downloadBlob(blob, "gamemonetize-512x340.png");
-    }
-    else if (key === "all") {
-      // Batch as ZIP
-      if (!window.JSZip) {
-        const s = document.createElement("script");
-        s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
-        document.head.appendChild(s);
-        try {
-          await new Promise((res, rej) => {
-            s.onload = res;
-            s.onerror = () => rej(new Error("Failed to load JSZip"));
-          });
-        } catch (e) {
-          alert("Could not load ZIP library. Check your internet connection.");
-          return;
-        }
-      }
-      const zip = new JSZip();
-      const dims = [
-        { w: 512, h: 384, name: "gamemonetize-512x384.png" },
-        { w: 512, h: 512, name: "gamemonetize-512x512.png" },
-        { w: 512, h: 340, name: "gamemonetize-512x340.png" }
-      ];
-      for (const d of dims) {
-        const blob = await renderGMAsset(d.w, d.h, img, bg);
-        zip.file(d.name, blob);
-      }
-      const out = await zip.generateAsync({ type: "blob" });
-      downloadBlob(out, "gamemonetize-assets.zip");
-    }
-  });
-});
-// ==========================================================
-// END GAMEMONETIZE
-// ==========================================================
+["expMode", "expType", "expJpgBg", "expWidth"].forEach(id =>
+  $(id).addEventListener("input", updateSizeReadout));
 
-// ---------- PNG blob helper ----------
-function blobPNG() {
-  return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+async function ensureZip() {
+  if (window.JSZip) return true;
+  const s = document.createElement("script");
+  s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+  document.head.appendChild(s);
+  try {
+    await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error("Failed to load JSZip")); });
+    return true;
+  } catch (e) {
+    alert("Could not load ZIP library. Check your internet connection.");
+    return false;
+  }
 }
 
 // ---------- download current ----------
 $("download").onclick = async () => {
+  if (!images.length) return alert("Upload a screenshot first.");
+  const o = exportOpts();
+  const keep = active;
   try {
-    const b = await blobPNG();
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(b);
-    a.download = `joheliv-playframe-${active + 1}.png`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    const r = await renderExport(active, o);
+    saveBlob(r.blob, exportName(keep, o, r));
   } catch (e) {
-    alert("Could not create PNG. Try again.");
+    alert("Could not create the image. Try again.");
   }
+  active = keep;
+  draw();
 };
 
 // ---------- batch ----------
-async function renderIndex(i) {
-  active = i;
-  draw();
-  await new Promise(r => setTimeout(r, 80));
-  return blobPNG();
-}
-
 $("batch").onclick = async () => {
   if (!images.length) return alert("Upload screenshots first.");
+  const o = exportOpts();
+  const keep = active;
   for (let i = 0; i < images.length; i++) {
     try {
-      const b = await renderIndex(i);
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(b);
-      a.download = `joheliv-playframe-${i + 1}.png`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      const r = await renderExport(i, o);
+      saveBlob(r.blob, exportName(i, o, r));
       await new Promise(r => setTimeout(r, 180));
     } catch (e) {
       console.warn(`Failed to export image ${i + 1}`, e);
     }
   }
+  active = keep;
   updateGallery();
   draw();
 };
@@ -1105,41 +969,67 @@ $("batch").onclick = async () => {
 // ---------- ZIP ----------
 $("zip").onclick = async () => {
   if (!images.length) return alert("Upload screenshots first.");
-
-  if (!window.JSZip) {
-    const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
-    document.head.appendChild(s);
-    try {
-      await new Promise((res, rej) => {
-        s.onload = res;
-        s.onerror = () => rej(new Error("Failed to load JSZip"));
-      });
-    } catch (e) {
-      alert("Could not load ZIP library. Check your internet connection.");
-      return;
-    }
-  }
-
+  if (!(await ensureZip())) return;
+  const o = exportOpts();
+  const keep = active;
   const zip = new JSZip();
   for (let i = 0; i < images.length; i++) {
     try {
-      const b = await renderIndex(i);
-      zip.file(`joheliv-playframe-${i + 1}.png`, b);
+      const r = await renderExport(i, o);
+      zip.file(exportName(i, o, r), r.blob);
     } catch (e) {
       console.warn(`Failed to add image ${i + 1} to ZIP`, e);
     }
   }
-
   const out = await zip.generateAsync({ type: "blob" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(out);
-  a.download = "joheliv-playframe-assets.zip";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  saveBlob(out, "joheliv-playframe-assets.zip");
+  active = keep;
   updateGallery();
   draw();
 };
+
+// ==========================================================
+// GAMEMONETIZE ASSET EXPORT — FULL IMAGE (CONTAIN, NO CROP)
+// ==========================================================
+function renderGMAsset(targetW, targetH, img, bgColor) {
+  return new Promise(resolve => {
+    const off = document.createElement("canvas");
+    off.width = targetW;
+    off.height = targetH;
+    const octx = off.getContext("2d");
+    octx.fillStyle = bgColor || "#0b1020";
+    octx.fillRect(0, 0, targetW, targetH);
+    if (img) {
+      const scale = Math.min(targetW / img.width, targetH / img.height);
+      const dw = img.width * scale, dh = img.height * scale;
+      octx.drawImage(img, (targetW - dw) / 2, (targetH - dh) / 2, dw, dh);
+    }
+    off.toBlob(blob => resolve(blob), "image/png");
+  });
+}
+
+document.querySelectorAll("[data-gm]").forEach(btn => {
+  btn.addEventListener("click", async () => {
+    const key = btn.dataset.gm;
+    if (!images[active]) return alert("Please upload a screenshot first.");
+    const img = images[active].img;
+    const bg = settings.bg;
+    const sizes = { "512x384": [512, 384], "512x512": [512, 512], "512x340": [512, 340] };
+
+    if (sizes[key]) {
+      const [w, h] = sizes[key];
+      saveBlob(await renderGMAsset(w, h, img, bg), `gamemonetize-${key}.png`);
+    } else if (key === "all") {
+      if (!(await ensureZip())) return;
+      const zip = new JSZip();
+      for (const k in sizes) {
+        const [w, h] = sizes[k];
+        zip.file(`gamemonetize-${k}.png`, await renderGMAsset(w, h, img, bg));
+      }
+      saveBlob(await zip.generateAsync({ type: "blob" }), "gamemonetize-assets.zip");
+    }
+  });
+});
 
 // ---------- reset ----------
 $("reset").onclick = () => {
@@ -1147,6 +1037,8 @@ $("reset").onclick = () => {
   active = 0;
   $("headline").value = "";
   $("caption").value = "";
+  settings.headline = "";
+  settings.caption = "";
   $("fileInfo").textContent = "No screenshots loaded.";
   updateGallery();
   draw();
